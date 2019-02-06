@@ -1,7 +1,7 @@
 {
   "name": "rand-steet-view",
   "version": "1.0.0",
-  "description": "",
+  "description": "Random Google Street View.",
   "author": "Michael Hulse",
   "license": "Apache 2.0",
   "scripts": {
