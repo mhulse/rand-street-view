@@ -1,0 +1,30 @@
+{
+  "name": "rand-steet-view",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Michael Hulse",
+  "license": "Apache 2.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "math",
+    "random",
+    "google",
+    "maps",
+    "lat",
+    "lon",
+    "coords",
+    "street",
+    "view"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mhulse/rand-steet-view.git"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "puppeteer": "^1.12.1",
+    "fs-extra": "^7.0.0"
+  }
+}
