@@ -4,6 +4,36 @@ const fs = require('fs');
 
 const html = (__dirname + '/temp.html');
 
+// Function declared as async so await can be used:
+async function getRandStreetview() {
+
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+  // Instead of using `goto().then()`, use await:
+  await page.goto(`file://${path.resolve(html)}`);
+
+  if (debug) {
+
+    // Display console messages:
+    await page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+
+  }
+
+  // Waiting for `window.panoData` to populate:
+  await page.waitFor(() => typeof(panoData) !== 'undefined');
+
+  // We should have `window.panoData` object from the puppeteer request:
+  let result = await page.evaluate(() => panoData);
+
+  // Garbage collect:
+  await browser.close();
+
+  // Resolve this async function with the result:
+  return result;
+
+}
+
 async function run(options = {}) {
 
   if (options.key && options.key.length) {
@@ -28,11 +58,11 @@ async function run(options = {}) {
       <script src="coords.js"></script>
     `.replace(/\s{2,}/g, '\n').trim();
 
-    fs.writeFileSync(html, template, 'utf8');
+    await fs.writeFile(html, template, 'utf8');
 
     let result = await getRandStreetview();
 
-    fs.unlinkSync(html);
+    await fs.unlink(html);
 
     return result;
 
@@ -41,26 +71,6 @@ async function run(options = {}) {
     throw new Error('key is required');
 
   }
-
-}
-
-async function getRandStreetview() {
-
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-
-  await page.goto(`file://${path.resolve(html)}`);
-
-  // Debugging:
-  // page.on('console', msg => console.log('PAGE LOG:', msg.text()));
-
-  await page.waitFor(() => typeof(panoData) !== 'undefined') // <== WAITING
-
-  let result = await page.evaluate(() => panoData);
-
-  browser.close();
-
-  return result;
 
 }
 

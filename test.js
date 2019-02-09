@@ -17,13 +17,17 @@ const key = require('./key');
     googlePanosOnly: false // Set to true if you only want Google panorama data.
   };
 
-  await streetview().then((res) => {
-    console.log(res); // { latitude: 32, longitude: 96.5 }
-  }).catch((err) => {
+  try {
+
+    let result = await streetview();
+
+    console.log(result); // { latitude: 32, longitude: 96.5 }
+
+  } catch(err) {
+
     console.log(err);
-  }).finally(() => {
-    console.log('hello')
-  });
+
+  }
 
   console.log('after');
 
