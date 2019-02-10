@@ -2,94 +2,82 @@
 
   let streetViewService = {};
   let o = {};
-  let counter;
 
-  const getPanorama = (randomize = false) => {
+  const getPanorama = () => {
 
-    let latlon = {};
+    let latLon = getRandomLatLng();
 
-    // (re)Initialize:
-    counter = 0;
-
-    if (( ! randomize) && o.startingCoords && o.startingCoords.latitude && o.startingCoords.longitude) {
-
-      latlon = o.startingCoords;
-
-    } else {
-
-      latlon = getRandomLatLon();
-
-    }
-
-    setNearestPanorama(new google.maps.LatLng(latlon.latitude, latlon.longitude));
+    setNearestPanorama(latLon);
 
   };
 
-  const getRandomLatLon = () => {
+  const getGoogleMapsLink = (latitude, longitude, zoom = 0) => {
 
-    return {
-      latitude: ((Math.random() * Math.max((180 * 0.25), 120)) - (90 - Math.min(0.25, 45))),
-      longitude: ((Math.random() * 360) - 180)
-    };
+    console.log(`Latitude: ${latitude}, Longitude: ${longitude}, Zoom: ${zoom}`);
+
+    return `https://maps.google.com/?q=${latitude},${longitude}&ll=${latitude},${longitude}&z=${zoom}`;
+
+  }
+
+  const getRandomLatLng = () => {
+
+    // https://stackoverflow.com/a/46210570/922323
+    let randomLatitude = (Math.round(Math.acos(2 * Math.random() - 1) * 180 / Math.PI) - 90);
+    let randomLongitude = (Math.floor(Math.random() * 360) - 180);
+
+    console.log(getGoogleMapsLink(randomLatitude, randomLongitude));
+
+    return new google.maps.LatLng(randomLatitude, randomLongitude);
 
   };
 
-  setNearestPanorama = (coords, bounds) => {
+  const setNearestPanorama = (coords, bounds) => {
 
-    let checkAround = (bounds || 100); // Meters!
+    let checkAround = (bounds || o.boundsRadius); // Meters!
 
-    streetViewService.getPanoramaByLocation(coords, checkAround, (panoData) => {
+    streetViewService.getPanoramaByLocation(
+      coords,
+      checkAround,
+      (panoData) => {
 
-      if (panoData && panoData.location && panoData.location.latLng) {
+        if (panoData && panoData.location && panoData.location.latLng) {
 
-        console.log('Found!', panoData.copyright);
-
-        if (( ! o.googlePanosOnly) || (o.googlePanosOnly && panoData.copyright.toLowerCase().includes('google'))) {
+          console.log('Found!');
 
           let loc = panoData.location.latLng;
+          let foundLatitude = loc.lat();
+          let foundLongitude = loc.lng();
 
-          // Looks like puppeteer prefers new objects vs. nested objects (e.g. `coords.panoData`):
+          console.log(getGoogleMapsLink(foundLatitude, foundLongitude));
+
+          // Looks like puppeteer prefers new objects like `window.panoData`
+          // vs. nested objects like `coords.panoData`.
           window.panoData = JSON.stringify({
-            lat: loc.lat(),
-            lng: loc.lng(),
+            lat: foundLatitude,
+            lng: foundLongitude,
             id: panoData.location.pano,
             copyright: panoData.copyright,
+            description: loc.description,
           });
 
           console.log(window.panoData);
 
-        } else if (o.restart) {
-
-          console.log('New search!');
-
-          // At this point, we’re going to assume any `startingCoords` failed us,
-          // and fall back to randomized latitude/longitude picks:
-          getPanorama(true);
-
-        }
-
-      } else {
-
-        counter++;
-
-        console.log('Not found!', checkAround, counter);
-
-        // Not finding any panos?
-        if (o.maxRestarts && (counter >= o.restartAfter)) {
-
-          // Screw it, let’s start over:
-          getPanorama(true);
-
         } else {
 
-          // Throttling requests:
-          setTimeout(setNearestPanorama, (o.throttleSeconds * 1000), coords, (checkAround * 2));
+          console.log('Not found!');
+
+          setTimeout(
+            setNearestPanorama,
+            (o.throttleSeconds * 1000),
+            coords,
+            (checkAround * o.boundsRadiusMultiplier)
+          );
 
         }
 
       }
 
-    });
+    );
 
   };
 
@@ -106,6 +94,9 @@
 })(window.coords = (window.coords || {}), google, JSON, window);
 
 document.addEventListener('DOMContentLoaded', function(event) {
+
+  // Stringifying for `stdout` and `stderr` into `process.stdout` and `process.stderr`:
+  console.log(`Options: ${JSON.stringify(window.options)}`);
 
   window.coords.init(window.options);
 
