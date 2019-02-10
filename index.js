@@ -1,8 +1,16 @@
 const puppeteer = require('puppeteer');
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs-extra');
 
 const html = (__dirname + '/temp.html');
+const defaults = {
+  debug: false, // Shows extra information about streetview attempts.
+  restart: false, // If the Google Maps script should request a new random location after `restartAfter` attempts.
+  maxRestarts: 1, // Maximum number of “restarts”.
+  restartAfter: 25, // Request a new random location after this number of street view radius checks from starting coordinates.
+  throttleSeconds: 1, // Seconds to throttle API requests to Google Maps.
+  googlePanosOnly: false // Set to true if you only want official Google panorama data.
+}
 
 // Function declared as async so await can be used:
 async function getRandStreetview() {
@@ -36,27 +44,19 @@ async function getRandStreetview() {
 
 async function run(options = {}) {
 
+  // Create a new shallow copy using Object Spread Params (last one in wins):
+  options = {
+    ...defaults,
+    ...options,
+  };
+
   if (options.key && options.key.length) {
-
-    let opts = [];
-
-    if (options.startingCoords) {
-
-      opts.push(`startingCoords:{latitude:${options.startingCoords.latitude},longitude:${options.startingCoords.longitude}}`);
-
-    }
-
-    if (options.googlePanosOnly) {
-
-      opts.push(`googlePanosOnly:true`);
-
-    }
 
     let template = `
       <script src="https://maps.googleapis.com/maps/api/js?key=${options.key}"></script>
-      <script>window.options={${opts.join(',')}};</script>
+      <script>window.options=${JSON.stringify(options)};</script>
       <script src="coords.js"></script>
-    `.replace(/\s{2,}/g, '\n').trim();
+    `.replace(/\s{2,}/g, '\n').trim(); // This line is purely cosmetic.
 
     await fs.writeFile(html, template, 'utf8');
 

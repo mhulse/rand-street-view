@@ -2,14 +2,14 @@
 
   let streetViewService = {};
   let o = {};
-  let eject;
+  let counter;
 
   const getPanorama = (randomize = false) => {
 
     let latlon = {};
 
     // (re)Initialize:
-    eject = 0;
+    counter = 0;
 
     if (( ! randomize) && o.startingCoords && o.startingCoords.latitude && o.startingCoords.longitude) {
 
@@ -58,7 +58,7 @@
 
           console.log(window.panoData);
 
-        } else {
+        } else if (o.restart) {
 
           console.log('New search!');
 
@@ -70,12 +70,12 @@
 
       } else {
 
-        eject++;
+        counter++;
 
-        console.log('Not found!', checkAround, eject);
+        console.log('Not found!', checkAround, counter);
 
         // Not finding any panos?
-        if (eject >= 25) {
+        if (o.maxRestarts && (counter >= o.restartAfter)) {
 
           // Screw it, let’s start over:
           getPanorama(true);
@@ -83,7 +83,7 @@
         } else {
 
           // Throttling requests:
-          setTimeout(setNearestPanorama, 500, coords, (checkAround * 2));
+          setTimeout(setNearestPanorama, (o.throttleSeconds * 1000), coords, (checkAround * 2));
 
         }
 
