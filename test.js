@@ -9,10 +9,10 @@ const key = require('./key');
   const options = {
     debug: true,
     key: key,
-    startingCoords: {
-      latitude: 39.8283,
-      longitude: 98.5795
-    },
+    // startingCoords: {
+    //   latitude: 39.8283,
+    //   longitude: 98.5795
+    // },
   };
 
   try {

@@ -5,11 +5,11 @@ const fs = require('fs-extra');
 const html = (__dirname + '/temp.html');
 const defaults = {
   debug: false, // Shows extra information about streetview attempts.
-  restart: false, // If the Google Maps script should request a new random location after `restartAfter` attempts.
-  maxRestarts: 1, // Maximum number of “restarts”.
-  restartAfter: 25, // Request a new random location after this number of street view radius checks from starting coordinates.
-  throttleSeconds: 1, // Seconds to throttle API requests to Google Maps.
-  googlePanosOnly: false, // Set to true if you only want official Google panorama data.
+  // restart: false, // If the Google Maps script should request a new random location after `restartAfter` attempts.
+  // maxRestarts: 1, // Maximum number of “restarts”.
+  // restartAfter: 25, // Request a new random location after this number of street view radius checks from starting coordinates.
+  // throttleSeconds: 1, // Seconds to throttle API requests to Google Maps.
+  // googlePanosOnly: false, // Set to true if you only want official Google panorama data.
   boundsRadius: 100, // Starting radius (in meters) to look for nearest Google Street View; multiplies by 2 if restart is turned on.
   boundsRadiusMultiplier: 2, // Multiplies bounds check by this number on each restart.
 }
@@ -54,7 +54,7 @@ async function run(options = {}) {
       <script src="https://maps.googleapis.com/maps/api/js?key=${settings.key}"></script>
       <script>window.options=${JSON.stringify(settings)};</script>
       <script src="coords.js"></script>
-    `.replace(/\s{2,}/g, '\n').trim(); // This line is purely cosmetic.
+    `.replace(/\s{2,}/g, '\n').trim(); // This line is purely for cosmetics.
 
     await fs.writeFile(html, template, 'utf8');
 
