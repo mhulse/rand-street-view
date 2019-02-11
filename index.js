@@ -4,22 +4,19 @@ const fs = require('fs-extra');
 
 const html = (__dirname + '/temp.html');
 const defaults = {
-  debug: false, // Shows extra information about streetview attempts.
-  // restart: false, // If the Google Maps script should request a new random location after `restartAfter` attempts.
-  // maxRestarts: 1, // Maximum number of “restarts”.
-  // restartAfter: 25, // Request a new random location after this number of street view radius checks from starting coordinates.
-  // throttleSeconds: 1, // Seconds to throttle API requests to Google Maps.
-  // googlePanosOnly: false, // Set to true if you only want official Google panorama data.
-  boundsRadius: 100, // Starting radius (in meters) to look for nearest Google Street View; multiplies by 2 if restart is turned on.
-  boundsRadiusMultiplier: 2, // Multiplies bounds check by this number on each restart.
+  debug: false,
+  radius: 100,
+  multiplier: 2,
+  attempts: 1,
+  throttle: 1,
 }
 
 // Function declared as async so await can be used:
-async function getRandStreetview(settings) {
+async function getRandStreetview(opts) {
 
   // https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions
   const browser = await puppeteer.launch({
-    dumpio: settings.debug,
+    dumpio: opts.debug,
   });
   const page = await browser.newPage();
 
@@ -43,28 +40,30 @@ async function getRandStreetview(settings) {
 async function run(options = {}) {
 
   // Create a new shallow copy using Object Spread Params (last one in wins):
-  const settings = {
+  const opts = {
     ...defaults,
     ...options,
   };
 
-  if (settings.key && settings.key.length) {
+  if (opts.key && opts.key.length) {
 
     let template = `
-      <script src="https://maps.googleapis.com/maps/api/js?key=${settings.key}"></script>
-      <script>window.options=${JSON.stringify(settings)};</script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=${opts.key}"></script>
+      <script>window.options=${JSON.stringify(opts)};</script>
       <script src="coords.js"></script>
     `.replace(/\s{2,}/g, '\n').trim(); // This line is purely for cosmetics.
 
     await fs.writeFile(html, template, 'utf8');
 
-    let result = await getRandStreetview(settings);
+    let result = await getRandStreetview(opts);
 
-    await fs.unlink(html);
+    if ( ! opts.debug) {
+
+      await fs.unlink(html);
+
+    }
 
     return result;
-
-    return 'foo'
 
   } else {
 
