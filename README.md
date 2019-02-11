@@ -5,7 +5,7 @@ Get random Google Street View data.
 ## Options
 
 option | default | description
-:-: | :-: | ---
+--- | --- | ---
 `key` | | Required. **Your** [Google Maps API key](https://developers.google.com/maps/documentation/javascript/get-api-key).
 `coords` | | Custom starting coordinates in the form of `{lattitude:0, longitude:0}`. If not defined, randomly picked coordinates will be used.
 `debug` | `false` | Among other things, this option pipes the browser process `stdout` and `stderr` into `process.stdout` and `process.stderr`.
