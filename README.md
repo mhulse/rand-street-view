@@ -14,15 +14,15 @@ option | default | description
 `attempts` | `1` | Number of times the script should grow the radius to search for a nearby panorama.
 `throttle` | `1` | Seconds to delay next API call to search for a panorama.
 
-## Development
+## Development notes
 
 Notes pertaining to module development … More information coming soon.
 
-## Debugging the Google Maps HTML
+### Debugging the Google Maps HTML
 
 Set `debug` to `true`. Next, locate `templ.html` and open it in Chrome and enable the Web Developer Toolbar.
 
-## Google Maps API key
+### Google Maps API key
 
 In order to make testing easier, create a `key.js` file and add in your [Google Maps API key](https://developers.google.com/maps/documentation/javascript/get-api-key):
 
