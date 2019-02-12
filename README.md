@@ -1,4 +1,4 @@
-# rand-steet-view
+# rand-street-view
 
 Get random Google Street View data.
 
