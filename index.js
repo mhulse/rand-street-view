@@ -9,6 +9,7 @@ const defaults = {
   multiplier: 2,
   attempts: 1,
   throttle: 1,
+  google: false,
 }
 
 // Function declared as async so await can be used:

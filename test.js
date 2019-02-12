@@ -11,6 +11,7 @@ const key = require('./key');
     throttle: 2,
     key: key,
     attempts: 15,
+    // google: true,
     // coords: {
     //   latitude: 39.8283,
     //   longitude: 98.5795
@@ -33,7 +34,7 @@ const key = require('./key');
 
       counter++;
 
-      options.coords = getRandomLatLon();
+      options.coords = (options.coords || getRandomLatLon());
 
       console.log(options.coords, counter);
 
@@ -41,8 +42,7 @@ const key = require('./key');
 
       data = JSON.parse(data);
 
-      // We only want official Google panoramas:
-      if ((data.status == 'error') || ( ! data.copyright.toLowerCase().includes('google'))) {
+      if (data.status == 'error') {
 
         if (counter <= 5) {
 
@@ -59,7 +59,7 @@ const key = require('./key');
 
       } else {
 
-        console.log('Found:', data);
+        // console.log('Found:', data);
 
         result = data;
 

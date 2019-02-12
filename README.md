@@ -13,6 +13,11 @@ option | default | description
 `multiplier` | `2` | Exponentially grows the radius by this number on each attempt.
 `attempts` | `1` | Number of times the script should grow the radius to search for a nearby panorama.
 `throttle` | `1` | Seconds to delay next API call to search for a panorama.
+`google` | `false` | Google-only pano data? Based on pano data copyright string.
+
+## Usage
+
+See [`test.js`](test.js) for an example.
 
 ## Development notes
 

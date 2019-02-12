@@ -75,7 +75,13 @@
       radius,
       (panoData) => {
 
-        if (panoData && panoData.location && panoData.location.latLng) {
+        let found = (panoData && panoData.location && panoData.location.latLng);
+
+        if (
+          (found && ( ! o.google))
+          ||
+          (found && o.google && panoData.copyright.toLowerCase().includes('google'))
+        ) {
 
           console.log('Found!');
 
