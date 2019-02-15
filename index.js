@@ -46,6 +46,12 @@ async function run(options = {}) {
     ...options,
   };
 
+  if (opts.debug) {
+
+    console.log(opts);
+
+  }
+
   if (opts.key && opts.key.length) {
 
     let template = `

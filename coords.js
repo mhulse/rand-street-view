@@ -23,17 +23,17 @@
 
     }
 
-    logGoogleMapsLink(latlon.latitude, latlon.longitude);
+    console.log(getGoogleMapsLink(latlon.latitude, latlon.longitude));
 
     getNearestPanorama(new google.maps.LatLng(latlon.latitude, latlon.longitude));
 
   };
 
-  const logGoogleMapsLink = (latitude, longitude, zoom = 0) => {
+  const getGoogleMapsLink = (latitude, longitude, zoom = 0) => {
 
-    console.log(`Latitude: ${latitude}, Longitude: ${longitude}, Zoom: ${zoom}`);
+    // console.log(`Latitude: ${latitude}, Longitude: ${longitude}, Zoom: ${zoom}`);
 
-    console.log(`https://maps.google.com/?q=${latitude},${longitude}&ll=${latitude},${longitude}&z=${zoom}`);
+    return `https://maps.google.com/?q=${latitude},${longitude}&ll=${latitude},${longitude}&z=${zoom}`;
 
   }
 
@@ -73,32 +73,35 @@
     streetViewService.getPanoramaByLocation(
       coords,
       radius,
-      (panoData) => {
+      (data) => {
 
-        let found = (panoData && panoData.location && panoData.location.latLng);
+        let found = (data && data.location && data.location.latLng);
 
         if (
           (found && ( ! o.google))
           ||
-          (found && o.google && panoData.copyright.toLowerCase().includes('google'))
+          (found && o.google && data.copyright.toLowerCase().includes('google'))
         ) {
 
           console.log('Found!');
 
-          let loc = panoData.location.latLng;
+          let loc = data.location.latLng;
           let foundLatitude = loc.lat();
           let foundLongitude = loc.lng();
+          let link = getGoogleMapsLink(foundLatitude, foundLongitude);
 
-          logGoogleMapsLink(foundLatitude, foundLongitude);
+          console.log(link);
 
           setWindowPanoData({
             status: 'success',
             message: `Panorama found within ${counter} attempts.`,
             lat: foundLatitude,
             lng: foundLongitude,
-            id: panoData.location.pano,
-            copyright: panoData.copyright,
+            id: data.location.pano,
+            copyright: data.copyright,
             description: loc.description,
+            link: link,
+            tiles: data.tiles,
           });
 
         } else {

@@ -2,6 +2,10 @@
 
 Get random Google Street View data.
 
+## Usage
+
+See [`test.js`](test.js) for an example.
+
 ## Options
 
 option | default | description
@@ -15,9 +19,32 @@ option | default | description
 `throttle` | `1` | Seconds to delay next API call to search for a panorama.
 `google` | `false` | Google-only pano data? Based on pano data copyright string.
 
-## Usage
+## Return value
 
-See [`test.js`](test.js) for an example.
+```js
+{
+  status: 'success',
+  message: 'Panorama found within 13 attempts.',
+  lat: 16.921235,
+  lng: 145.78154399999994,
+  id: 'CAoSLEFGMVFpcE1iNk1oUTBQN3BoZzVxVW1MMTNNMVdjTmI3aDdJcThjdE9EMWRo',
+  copyright: '© Paul Toogood',
+  link: 'https://maps.google.com/?q=16.921235,145.78154399999994&ll=16.921235,145.78154399999994&z=0',
+  tiles: {
+    centerHeading: 0,
+    originHeading: 0,
+    originPitch: 0,
+    tileSize: {
+      width: 512,
+      height: 512
+    },
+    worldSize: {
+      width: 10782,
+      height: 5391
+    }
+  }
+}
+```
 
 ## Development notes
 

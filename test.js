@@ -5,6 +5,7 @@ const key = require('./key');
 (async function start() {
 
   console.log('before');
+  console.log('');
 
   const options = {
     debug: true,
@@ -36,7 +37,9 @@ const key = require('./key');
 
       options.coords = (options.coords || getRandomLatLon());
 
-      console.log(options.coords, counter);
+      console.log('Coordinates:', options.coords);
+      console.log('Counter:', counter);
+      console.log('');
 
       let data = await streetview(options);
 
@@ -75,6 +78,7 @@ const key = require('./key');
 
   }
 
+  console.log('');
   console.log('after');
 
 })();
