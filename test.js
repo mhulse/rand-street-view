@@ -41,6 +41,9 @@ const key = require('./key');
       console.log('Counter:', counter);
       console.log('');
 
+      console.log('Searching for panorama, please wait …');
+      console.log('');
+
       let data = await streetview(options);
 
       data = JSON.parse(data);
