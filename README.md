@@ -52,7 +52,7 @@ Notes pertaining to module development … More information coming soon.
 
 ### Debugging the Google Maps HTML
 
-Set `debug` to `true`. Next, locate `templ.html` and open it in Chrome and enable the Web Developer Toolbar.
+Set `debug` to `true`. Next, locate `temp.html` and open it in Chrome and enable the Web Developer Toolbar.
 
 ### Google Maps API key
 
