@@ -14,18 +14,18 @@
     if (o.coords && o.coords.latitude && o.coords.longitude) {
 
       // Use custom starting cooridinates:
-      latlon = o.coords;
+      latLon = o.coords;
 
     } else {
 
       // Use randomly-generated cooridinates:
-      latLon = getRandomLatLng();
+      latLon = getRandomLatLon();
 
     }
 
-    console.log(getGoogleMapsLink(latlon.latitude, latlon.longitude));
+    console.log(getGoogleMapsLink(latLon.latitude, latLon.longitude));
 
-    getNearestPanorama(new google.maps.LatLng(latlon.latitude, latlon.longitude));
+    getNearestPanorama(new google.maps.LatLng(latLon.latitude, latLon.longitude));
 
   };
 
@@ -92,6 +92,8 @@
 
           console.log(link);
 
+          // console.log(data);
+
           setWindowPanoData({
             status: 'success',
             message: `Panorama found within ${counter} attempts.`,
@@ -102,6 +104,10 @@
             description: loc.description,
             link: link,
             tiles: data.tiles,
+            image_key: (data.takeDownUrl && (() => {
+              let searchParams = new URLSearchParams(data.takeDownUrl);
+              return searchParams.get('image_key').split('2s')[1];
+            })() || ''),
           });
 
         } else {
