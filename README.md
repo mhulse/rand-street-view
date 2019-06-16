@@ -2,6 +2,10 @@
 
 Get random Google Street View data.
 
+## In the real world
+
+See [Kludgy](https://github.com/mhulse/kludgy)
+
 ## Usage
 
 See [`test.js`](test.js) for an example.
