@@ -24,7 +24,7 @@
   },
   "main": "index.js",
   "dependencies": {
-    "puppeteer": "^1.12.1",
+    "puppeteer": "^1.13.0",
     "fs-extra": "^7.0.0"
   }
 }
